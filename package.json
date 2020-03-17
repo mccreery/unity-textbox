@@ -1,0 +1,6 @@
+{
+  "name": "com.mccreery.textbox",
+  "version": "0.1.0",
+  "displayName": "Textbox Component",
+  "description": "Common functionality for achieving a 'typing' effect in a textbox.\nFeatures include:\n\u25AA Keypress sound with pitch shift options\n\u25AA Extra pauses between words\n\u25AA Automatic binding to Text and AudioSource components\n\nYou can use the script on any GameObject with a Text component inside a canvas. Rich text is required because the Textbox component avoids wrapping issues by setting the text color to transparent in the remaining text. Existing rich text tags are retained."
+}
