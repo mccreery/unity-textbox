@@ -2,7 +2,7 @@
 
 public static class MonoBehaviourExtensions
 {
-    public static void GetComponentIfNull<T>(this MonoBehaviour monoBehaviour, ref T inspectorField, bool create = false) where T : Component
+    public static T LazyGet<T>(this MonoBehaviour monoBehaviour, ref T inspectorField, bool create = false) where T : Component
     {
         if (inspectorField == null)
         {
@@ -13,5 +13,6 @@ public static class MonoBehaviourExtensions
                 inspectorField = monoBehaviour.gameObject.AddComponent<T>();
             }
         }
+        return inspectorField;
     }
 }

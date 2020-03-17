@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,7 @@ public class Textbox : MonoBehaviour
 {
     [SerializeField]
     private Text textComponent = default;
-    private Text TextComponent => LazyGet(ref textComponent);
+    private Text TextComponent => this.LazyGet(ref textComponent);
 
     [SerializeField]
     private float characterDelay = 0.05f;
@@ -22,7 +22,7 @@ public class Textbox : MonoBehaviour
     [Header("Typing Sound")]
     [SerializeField]
     private AudioSource audioSourceComponent = default;
-    private AudioSource AudioSourceComponent => LazyGet(ref audioSourceComponent, true);
+    private AudioSource AudioSourceComponent => this.LazyGet(ref audioSourceComponent, true);
 
     [SerializeField]
     private AudioClip audioClip = default;
@@ -115,20 +115,6 @@ public class Textbox : MonoBehaviour
             float t = (windowSize + 1 - distanceToWhitespace) / (float)windowSize;
             return windowPitchShift * Mathf.Clamp01(t);
         }
-    }
-
-    private T LazyGet<T>(ref T inspectorField, bool create = false) where T : Component
-    {
-        if (inspectorField == null)
-        {
-            inspectorField = GetComponent<T>();
-
-            if (create && inspectorField == null)
-            {
-                inspectorField = gameObject.AddComponent<T>();
-            }
-        }
-        return inspectorField;
     }
 }
 
