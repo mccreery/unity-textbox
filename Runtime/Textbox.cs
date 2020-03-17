@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -37,6 +38,13 @@ public class Textbox : MonoBehaviour
     [SerializeField]
     private float windowPitchShift = 0.0f;
 
+    [SerializeField]
+    private UnityEvent startTyping;
+    [SerializeField]
+    private UnityEvent finishTyping;
+
+    public bool Typing { get; private set; }
+
     public void Text(string text)
     {
         StopAllCoroutines();
@@ -45,6 +53,9 @@ public class Textbox : MonoBehaviour
 
     private IEnumerator TextCoro(string richText)
     {
+        Typing = true;
+        startTyping.Invoke();
+
         Queue<int> whitespaceQueue = new Queue<int>(RichText.Find(richText, c => char.IsWhiteSpace(c)));
         int length = RichText.Length(richText);
         whitespaceQueue.Enqueue(length);
@@ -76,6 +87,9 @@ public class Textbox : MonoBehaviour
                 yield return new WaitForSecondsRealtime(nextDelay);
             }
         }
+
+        Typing = false;
+        finishTyping.Invoke();
     }
 
     private void PlayTypingSound(int distanceToWhitespace)
