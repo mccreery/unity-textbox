@@ -7,6 +7,11 @@ public class RichText
 {
     private static readonly Regex Tags = new Regex("((?:<[^<>]+>)+)", RegexOptions.Compiled);
 
+    public static string StripTags(string richText)
+    {
+        return Tags.Replace(richText, "");
+    }
+
     public static IEnumerable<int> Find(string richText, Predicate<char> predicate)
     {
         string[] tokens = Tags.Split(richText);
