@@ -50,7 +50,7 @@ public class TextboxTypingSound : MonoBehaviour
                 + GetWindowPitchShift(distanceToWhitespace)
                 + Random.Range(randomPitchShift.min, randomPitchShift.max);
 
-            lastPlayTime = Time.timeSinceLevelLoad;
+            lastPlayTime = Time.unscaledTime;
             AudioSourceComponent.PlayOneShot(audioClip);
         }
     }
