@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -29,17 +29,15 @@ public class Textbox : MonoBehaviour
     private UnityEvent finishTyping = default;
     public UnityEvent FinishTyping => finishTyping;
 
-    public bool Typing { get; private set; }
+    private int typingId;
+    public bool Typing => typingId != 0;
 
-    public void Text(string text)
-    {
-        StopAllCoroutines();
-        StartCoroutine(TextCoro(text));
-    }
+    public void StartText(string richText) => StartCoroutine(Text(richText));
 
-    private IEnumerator TextCoro(string richText)
+    public IEnumerator Text(string richText)
     {
-        Typing = true;
+        // Announce new ID is typing
+        int myTypingId = ++typingId;
         startTyping.Invoke();
 
         string plainText = TextUtil.StripTags(richText);
@@ -49,12 +47,14 @@ public class Textbox : MonoBehaviour
             TypingState typingState = new TypingState(richText, visibleLength, plainText);
 
             yield return YieldUtil.WaitForSecondsScaled(GetDelay(typingState), scaledTime);
+            // Stop typing if anyone else has started
+            if (typingId != myTypingId) yield break;
 
             TextComponent.text = TextUtil.InsertTagRichText(richText, visibleLength, plainText.Length, "<color=#fff0>", "</color>");
             characterTyped.Invoke(typingState);
         }
 
-        Typing = false;
+        typingId = 0;
         finishTyping.Invoke();
     }
 
