@@ -39,6 +39,7 @@ public class Textbox : MonoBehaviour
         // Announce new ID is typing
         int myTypingId = ++typingId;
         startTyping.Invoke();
+        TextComponent.text = string.Empty;
 
         string plainText = TextUtil.StripTags(richText);
 
