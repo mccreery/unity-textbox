@@ -17,6 +17,8 @@ public class Textbox : MonoBehaviour
     [SerializeField]
     private bool scaledTime = true;
 
+    public float delayScale = 1.0f;
+
     [SerializeField]
     private UnityEvent startTyping = new UnityEvent();
     public UnityEvent StartTyping => startTyping;
@@ -47,7 +49,11 @@ public class Textbox : MonoBehaviour
         {
             TypingState typingState = new TypingState(richText, visibleLength, plainText);
 
-            yield return YieldUtil.WaitForSecondsScaled(GetDelay(typingState), scaledTime);
+            // Finish typing (with cleanup) if delay is 0
+            if (delayScale == 0) break;
+
+            yield return YieldUtil.WaitForSecondsScaled(GetDelay(typingState) * delayScale, scaledTime);
+
             // Stop typing if anyone else has started
             if (typingId != myTypingId) yield break;
 
@@ -55,6 +61,7 @@ public class Textbox : MonoBehaviour
             characterTyped.Invoke(typingState);
         }
 
+        TextComponent.text = richText;
         typingId = 0;
         finishTyping.Invoke();
     }
