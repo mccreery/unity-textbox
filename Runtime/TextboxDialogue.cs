@@ -6,7 +6,7 @@ public class TextboxDialogue : MonoBehaviour
 {
     [SerializeField]
     [Multiline]
-    private string[] messages;
+    private string[] messages = default;
 
     [SerializeField]
     private bool playOnStart = true;
@@ -27,12 +27,18 @@ public class TextboxDialogue : MonoBehaviour
     private bool useScaledTime = true;
 
     [SerializeField]
+    private bool clearOnFinish = true;
+
+    [SerializeField]
     private UnityEvent dialogueStart = default;
     public UnityEvent DialogueStart => dialogueStart;
 
     [SerializeField]
     private UnityEvent dialogueEnd = default;
     public UnityEvent DialogueEnd => dialogueEnd;
+
+    private int runningId = 0;
+    public bool Running => runningId != 0;
 
     private void Start()
     {
@@ -46,6 +52,7 @@ public class TextboxDialogue : MonoBehaviour
 
     private IEnumerator Dialogue()
     {
+        int myId = ++runningId;
         dialogueStart.Invoke();
 
         foreach (string message in messages)
@@ -59,8 +66,15 @@ public class TextboxDialogue : MonoBehaviour
             {
                 yield return Prompt.TextAndWait(message);
             }
+
+            if (runningId != myId) yield break;
         }
 
+        runningId = 0;
+        if (clearOnFinish)
+        {
+            yield return Textbox.Text(string.Empty);
+        }
         dialogueEnd.Invoke();
     }
 }
