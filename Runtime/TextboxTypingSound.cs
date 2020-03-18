@@ -16,6 +16,9 @@ public class TextboxTypingSound : MonoBehaviour
     private bool playOnWhitespace = false;
 
     [SerializeField]
+    private float minimumDelay;
+
+    [SerializeField]
     private RangeFloat randomPitchShift = default;
 
     [Header("Pitch shift window")]
@@ -37,14 +40,17 @@ public class TextboxTypingSound : MonoBehaviour
         });
     }
 
+    private float lastPlayTime;
+
     private void PlayTypingSound(int distanceToWhitespace)
     {
-        if (audioClip != null)
+        if (audioClip != null && Time.unscaledTime - lastPlayTime >= minimumDelay)
         {
             AudioSourceComponent.pitch = 1.0f
                 + GetWindowPitchShift(distanceToWhitespace)
                 + Random.Range(randomPitchShift.min, randomPitchShift.max);
 
+            lastPlayTime = Time.timeSinceLevelLoad;
             AudioSourceComponent.PlayOneShot(audioClip);
         }
     }
