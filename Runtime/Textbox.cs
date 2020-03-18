@@ -48,11 +48,17 @@ public class Textbox : MonoBehaviour
         for (int visibleLength = 1; visibleLength <= plainText.Length; visibleLength++)
         {
             TypingState typingState = new TypingState(richText, visibleLength, plainText);
+            float delay = GetDelay(typingState) * delayScale;
 
             // Finish typing (with cleanup) if delay is 0
-            if (delayScale == 0) break;
-
-            yield return YieldUtil.WaitForSecondsScaled(GetDelay(typingState) * delayScale, scaledTime);
+            if (delay == 0)
+            {
+                break;
+            }
+            else
+            {
+                yield return YieldUtil.WaitForSecondsScaled(delay, scaledTime);
+            }
 
             // Stop typing if anyone else has started
             if (typingId != myTypingId) yield break;
