@@ -19,7 +19,7 @@ namespace McCreery.Textbox
         [SerializeField]
         private bool scaledTime = true;
 
-        public float DelayScale { get; set; }
+        public float DelayScale { get; set; } = 1.0f;
 
         [SerializeField]
         private UnityEvent startTyping = new UnityEvent();
