@@ -17,26 +17,16 @@ public class TextboxPrompt : MonoBehaviour
     {
         Textbox.delayScale = 1.0f;
 
-        while (true)
+        while (Textbox.Typing || !Input.GetButtonDown(buttonName))
         {
             if (Input.GetButtonDown(buttonName))
             {
-                if (Textbox.Typing)
-                {
-                    Textbox.delayScale = turboDelayScale;
-                    yield return null;
-                }
-                else
-                {
-                    Textbox.delayScale = 1.0f;
-                    yield break;
-                }
+                Textbox.delayScale = turboDelayScale;
             }
-            else
-            {
-                yield return null;
-            }
+            yield return null;
         }
+
+        Textbox.delayScale = 1.0f;
     }
 
     public IEnumerator TextAndWait(string richText)
