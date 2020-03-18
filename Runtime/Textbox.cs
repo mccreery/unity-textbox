@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,15 +18,15 @@ public class Textbox : MonoBehaviour
     private bool scaledTime = true;
 
     [SerializeField]
-    private UnityEvent startTyping;
+    private UnityEvent startTyping = default;
     public UnityEvent StartTyping => startTyping;
 
     [SerializeField]
-    private TypingStateEvent characterTyped;
+    private TypingStateEvent characterTyped = default;
     public TypingStateEvent CharacterTyped => characterTyped;
 
     [SerializeField]
-    private UnityEvent finishTyping;
+    private UnityEvent finishTyping = default;
     public UnityEvent FinishTyping => finishTyping;
 
     public bool Typing { get; private set; }
