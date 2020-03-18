@@ -13,11 +13,11 @@ public class TextboxDialogue : MonoBehaviour
 
     [SerializeField]
     private Textbox textbox;
-    private Textbox Textbox => this.LazyGet(ref textbox);
+    private Textbox Textbox => this.LazyGet(ref textbox, true);
 
     [SerializeField]
     private TextboxPrompt prompt;
-    private TextboxPrompt Prompt => this.LazyGet(ref prompt);
+    private TextboxPrompt Prompt => this.LazyGet(ref prompt, true);
 
     [SerializeField]
     private bool automatic = false;

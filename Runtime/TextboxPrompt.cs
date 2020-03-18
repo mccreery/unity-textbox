@@ -5,10 +5,10 @@ public class TextboxPrompt : MonoBehaviour
 {
     [SerializeField]
     private Textbox textbox;
-    public Textbox Textbox => this.LazyGet(ref textbox);
+    public Textbox Textbox => this.LazyGet(ref textbox, true);
 
     [SerializeField]
-    private string buttonName = default;
+    private string buttonName = "Submit";
 
     public IEnumerator Wait()
     {

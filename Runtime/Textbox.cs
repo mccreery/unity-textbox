@@ -18,15 +18,15 @@ public class Textbox : MonoBehaviour
     private bool scaledTime = true;
 
     [SerializeField]
-    private UnityEvent startTyping = default;
+    private UnityEvent startTyping = new UnityEvent();
     public UnityEvent StartTyping => startTyping;
 
     [SerializeField]
-    private TypingStateEvent characterTyped = default;
+    private TypingStateEvent characterTyped = new TypingStateEvent();
     public TypingStateEvent CharacterTyped => characterTyped;
 
     [SerializeField]
-    private UnityEvent finishTyping = default;
+    private UnityEvent finishTyping = new UnityEvent();
     public UnityEvent FinishTyping => finishTyping;
 
     private int typingId;

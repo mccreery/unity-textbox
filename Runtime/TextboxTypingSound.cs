@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Textbox))]
 public class TextboxTypingSound : MonoBehaviour
 {
     [SerializeField]
     private AudioSource audioSourceComponent = default;
     private AudioSource AudioSourceComponent => this.LazyGet(ref audioSourceComponent, true);
+
+    [SerializeField]
+    private Textbox textbox = default;
+    private Textbox Textbox => this.LazyGet(ref textbox, true);
 
     [SerializeField]
     private AudioClip audioClip = default;
@@ -23,7 +26,7 @@ public class TextboxTypingSound : MonoBehaviour
 
     private void Start()
     {
-        GetComponent<Textbox>().CharacterTyped.AddListener(typingState =>
+        Textbox.CharacterTyped.AddListener(typingState =>
         {
             int distanceToWhitespace = typingState.CurrentWord.End - (typingState.CursorPos - 1);
 
