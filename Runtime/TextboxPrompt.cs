@@ -17,18 +17,18 @@ namespace McCreery.Textbox
 
         public IEnumerator Wait()
         {
-            Textbox.delayScale = 1.0f;
+            Textbox.DelayScale = 1.0f;
 
             while (Textbox.Typing || !Input.GetButtonDown(buttonName))
             {
                 if (Input.GetButtonDown(buttonName))
                 {
-                    Textbox.delayScale = turboDelayScale;
+                    Textbox.DelayScale = turboDelayScale;
                 }
                 yield return null;
             }
 
-            Textbox.delayScale = 1.0f;
+            Textbox.DelayScale = 1.0f;
         }
 
         public IEnumerator TextAndWait(string richText)

@@ -19,7 +19,7 @@ namespace McCreery.Textbox
         [SerializeField]
         private bool scaledTime = true;
 
-        public float delayScale = 1.0f;
+        public float DelayScale { get; set; }
 
         [SerializeField]
         private UnityEvent startTyping = new UnityEvent();
@@ -50,7 +50,7 @@ namespace McCreery.Textbox
             for (int visibleLength = 1; visibleLength <= plainText.Length; visibleLength++)
             {
                 TypingState typingState = new TypingState(richText, visibleLength, plainText);
-                float delay = GetDelay(typingState) * delayScale;
+                float delay = GetDelay(typingState) * DelayScale;
 
                 // Finish typing (with cleanup) if delay is 0
                 if (delay == 0)

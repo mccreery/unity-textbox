@@ -52,7 +52,7 @@ namespace McCreery.Textbox
             StartCoroutine(Dialogue());
         }
 
-        private IEnumerator Dialogue()
+        public IEnumerator Dialogue()
         {
             int myId = ++runningId;
             dialogueStart.Invoke();
