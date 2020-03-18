@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class RichText
+public class TextUtil
 {
     private static readonly Regex Tags = new Regex(@"((?:<[^<>]+>)+)", RegexOptions.Compiled);
 

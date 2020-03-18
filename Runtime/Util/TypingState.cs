@@ -7,13 +7,13 @@ public struct TypingState
     public int CursorPos { get; }
 
     private string fullPlainText;
-    public string FullPlainText => fullPlainText = fullPlainText ?? RichText.StripTags(FullRichText);
+    public string FullPlainText => fullPlainText = fullPlainText ?? TextUtil.StripTags(FullRichText);
 
     private Substring? visiblePlainText;
     public Substring VisiblePlainText => (Substring)(visiblePlainText = visiblePlainText ?? new Substring(FullPlainText, 0, CursorPos));
 
     private Substring? currentWord;
-    public Substring CurrentWord => (Substring)(currentWord = currentWord ?? RichText.GetWordAt(FullPlainText, CursorPos - 1));
+    public Substring CurrentWord => (Substring)(currentWord = currentWord ?? TextUtil.GetWordAt(FullPlainText, CursorPos - 1));
 
     public TypingState(string richText, int cursorPos, string fullPlainText = null)
     {

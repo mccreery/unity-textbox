@@ -42,7 +42,7 @@ public class Textbox : MonoBehaviour
         Typing = true;
         startTyping.Invoke();
 
-        string plainText = RichText.StripTags(richText);
+        string plainText = TextUtil.StripTags(richText);
 
         for (int visibleLength = 1; visibleLength <= plainText.Length; visibleLength++)
         {
@@ -50,7 +50,7 @@ public class Textbox : MonoBehaviour
 
             yield return YieldUtil.WaitForSecondsScaled(GetDelay(typingState), scaledTime);
 
-            TextComponent.text = RichText.InsertTagRichText(richText, visibleLength, plainText.Length, "<color=#fff0>", "</color>");
+            TextComponent.text = TextUtil.InsertTagRichText(richText, visibleLength, plainText.Length, "<color=#fff0>", "</color>");
             characterTyped.Invoke(typingState);
         }
 
