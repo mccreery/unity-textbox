@@ -1,10 +1,8 @@
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class Textbox : MonoBehaviour
 {
@@ -19,29 +17,17 @@ public class Textbox : MonoBehaviour
     [SerializeField]
     private bool scaledTime = true;
 
-    [Header("Typing Sound")]
-    [SerializeField]
-    private AudioSource audioSourceComponent = default;
-    private AudioSource AudioSourceComponent => this.LazyGet(ref audioSourceComponent, true);
-
-    [SerializeField]
-    private AudioClip audioClip = default;
-    [SerializeField]
-    private bool playOnWhitespace = false;
-
-    [SerializeField]
-    private RangeFloat randomPitchShift = default;
-
-    [Header("Pitch shift window")]
-    [SerializeField]
-    private int windowSize = 2;
-    [SerializeField]
-    private float windowPitchShift = 0.0f;
-
     [SerializeField]
     private UnityEvent startTyping;
+    public UnityEvent StartTyping => startTyping;
+
+    [SerializeField]
+    private TypingStateEvent characterTyped;
+    public TypingStateEvent CharacterTyped => characterTyped;
+
     [SerializeField]
     private UnityEvent finishTyping;
+    public UnityEvent FinishTyping => finishTyping;
 
     public bool Typing { get; private set; }
 
@@ -56,65 +42,26 @@ public class Textbox : MonoBehaviour
         Typing = true;
         startTyping.Invoke();
 
-        Queue<int> whitespaceQueue = new Queue<int>(RichText.Find(richText, c => char.IsWhiteSpace(c)));
-        int length = RichText.Length(richText);
-        whitespaceQueue.Enqueue(length);
+        string plainText = RichText.StripTags(richText);
 
-        for (int i = 0; i < length; i++)
+        for (int visibleLength = 1; visibleLength <= plainText.Length; visibleLength++)
         {
-            TextComponent.text = RichText.Format(richText, i + 1, length, "<color=#fff0>", "</color>");
+            TypingState typingState = new TypingState(richText, visibleLength, plainText);
 
-            int distanceToWhitespace = whitespaceQueue.Peek() - i;
-            bool isWhitespace = distanceToWhitespace == 0;
+            yield return YieldUtil.WaitForSecondsScaled(GetDelay(typingState), scaledTime);
 
-            if (isWhitespace)
-            {
-                whitespaceQueue.Dequeue();
-            }
-
-            if (!isWhitespace || playOnWhitespace)
-            {
-                PlayTypingSound(distanceToWhitespace);
-            }
-
-            float nextDelay = isWhitespace ? whitespaceDelay : characterDelay;
-            if (scaledTime)
-            {
-                yield return new WaitForSeconds(nextDelay);
-            }
-            else
-            {
-                yield return new WaitForSecondsRealtime(nextDelay);
-            }
+            TextComponent.text = RichText.InsertTagRichText(richText, visibleLength, plainText.Length, "<color=#fff0>", "</color>");
+            characterTyped.Invoke(typingState);
         }
 
         Typing = false;
         finishTyping.Invoke();
     }
 
-    private void PlayTypingSound(int distanceToWhitespace)
+    private float GetDelay(TypingState typingState)
     {
-        if (audioClip != null)
-        {
-            AudioSourceComponent.pitch = 1.0f
-                + GetWindowPitchShift(distanceToWhitespace)
-                + Random.Range(randomPitchShift.min, randomPitchShift.max);
-
-            AudioSourceComponent.PlayOneShot(audioClip);
-        }
-    }
-
-    private float GetWindowPitchShift(int distanceToWhitespace)
-    {
-        if (windowSize == 0)
-        {
-            return 0.0f;
-        }
-        else
-        {
-            float t = (windowSize + 1 - distanceToWhitespace) / (float)windowSize;
-            return windowPitchShift * Mathf.Clamp01(t);
-        }
+        return typingState.CurrentWord.Contains(typingState.CursorPos - 1)
+            ? characterDelay : whitespaceDelay;
     }
 }
 
