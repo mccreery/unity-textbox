@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
 
-public static class MonoBehaviourExtensions
+namespace McCreery.Textbox
 {
-    public static T LazyGet<T>(this MonoBehaviour monoBehaviour, ref T inspectorField, bool create = false) where T : Component
+    static class MonoBehaviourExtensions
     {
-        if (inspectorField == null)
+        public static T LazyGet<T>(this MonoBehaviour monoBehaviour, ref T inspectorField, bool create = false) where T : Component
         {
-            inspectorField = monoBehaviour.GetComponent<T>();
-
-            if (create && inspectorField == null)
+            if (inspectorField == null)
             {
-                inspectorField = monoBehaviour.gameObject.AddComponent<T>();
+                inspectorField = monoBehaviour.GetComponent<T>();
+
+                if (create && inspectorField == null)
+                {
+                    inspectorField = monoBehaviour.gameObject.AddComponent<T>();
+                }
             }
+            return inspectorField;
         }
-        return inspectorField;
     }
 }

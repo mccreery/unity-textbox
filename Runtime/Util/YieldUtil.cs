@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-public class YieldUtil
+namespace McCreery.Textbox
 {
-    public static object WaitForSecondsScaled(float time, bool scaled)
+    static class YieldUtil
     {
-        return scaled ? (object)new WaitForSeconds(time) : new WaitForSecondsRealtime(time);
+        public static object WaitForSecondsScaled(float time, bool scaled)
+        {
+            return scaled ? (object)new WaitForSeconds(time) : new WaitForSecondsRealtime(time);
+        }
     }
 }

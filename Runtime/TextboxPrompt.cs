@@ -1,43 +1,46 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class TextboxPrompt : MonoBehaviour
+namespace McCreery.Textbox
 {
-    [SerializeField]
-    private Textbox textbox;
-    public Textbox Textbox => this.LazyGet(ref textbox, true);
-
-    [SerializeField]
-    private string buttonName = "Submit";
-
-    [SerializeField]
-    private float turboDelayScale = 1.0f;
-
-    public IEnumerator Wait()
+    public class TextboxPrompt : MonoBehaviour
     {
-        Textbox.delayScale = 1.0f;
+        [SerializeField]
+        private Textbox textbox;
+        public Textbox Textbox => this.LazyGet(ref textbox, true);
 
-        while (Textbox.Typing || !Input.GetButtonDown(buttonName))
+        [SerializeField]
+        private string buttonName = "Submit";
+
+        [SerializeField]
+        private float turboDelayScale = 1.0f;
+
+        public IEnumerator Wait()
         {
-            if (Input.GetButtonDown(buttonName))
+            Textbox.delayScale = 1.0f;
+
+            while (Textbox.Typing || !Input.GetButtonDown(buttonName))
             {
-                Textbox.delayScale = turboDelayScale;
+                if (Input.GetButtonDown(buttonName))
+                {
+                    Textbox.delayScale = turboDelayScale;
+                }
+                yield return null;
             }
-            yield return null;
+
+            Textbox.delayScale = 1.0f;
         }
 
-        Textbox.delayScale = 1.0f;
-    }
+        public IEnumerator TextAndWait(string richText)
+        {
+            Coroutine text = StartCoroutine(Textbox.Text(richText));
 
-    public IEnumerator TextAndWait(string richText)
-    {
-        Coroutine text = StartCoroutine(Textbox.Text(richText));
+            // Start waiting 1 frame later to avoid double button press
+            yield return null;
+            Coroutine wait = StartCoroutine(Wait());
 
-        // Start waiting 1 frame later to avoid double button press
-        yield return null;
-        Coroutine wait = StartCoroutine(Wait());
-
-        yield return text;
-        yield return wait;
+            yield return text;
+            yield return wait;
+        }
     }
 }
