@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace McCreery.Textbox
 {
-    public class TextboxDialogue : MonoBehaviour
+    public class BasicDialogue : ScriptedDialogue
     {
         [SerializeField]
         [Multiline]
@@ -44,15 +44,10 @@ namespace McCreery.Textbox
 
         private void Start()
         {
-            if (playOnStart) StartDialogue();
+            if (playOnStart) StartCoroutine();
         }
 
-        public void StartDialogue()
-        {
-            StartCoroutine(Dialogue());
-        }
-
-        public IEnumerator Dialogue()
+        protected sealed override IEnumerator Coroutine()
         {
             int myId = ++runningId;
             dialogueStart.Invoke();
