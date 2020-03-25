@@ -1,25 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace McCreery.Textbox
 {
-    public class BasicDialogue : ScriptedDialogue
+    public class BasicDialogue : MonoBehaviour, IDialogue
     {
         [SerializeField]
         [Multiline]
         private string[] messages = default;
-
-        [SerializeField]
-        private bool playOnStart = true;
-
-        [SerializeField]
-        private Textbox textbox;
-        private Textbox Textbox => this.LazyGet(ref textbox, true);
-
-        [SerializeField]
-        private TextboxPrompt prompt;
-        private TextboxPrompt Prompt => this.LazyGet(ref prompt, true);
 
         [SerializeField]
         private bool automatic = false;
@@ -31,48 +19,23 @@ namespace McCreery.Textbox
         [SerializeField]
         private bool clearOnFinish = true;
 
-        [SerializeField]
-        private UnityEvent dialogueStart = default;
-        public UnityEvent DialogueStart => dialogueStart;
-
-        [SerializeField]
-        private UnityEvent dialogueEnd = default;
-        public UnityEvent DialogueEnd => dialogueEnd;
-
-        private int runningId = 0;
-        public bool Running => runningId != 0;
-
-        private void Start()
+        public IEnumerator Play(DialogueManager manager, int id)
         {
-            if (playOnStart) StartCoroutine();
-        }
-
-        protected sealed override IEnumerator Coroutine()
-        {
-            int myId = ++runningId;
-            dialogueStart.Invoke();
-
             foreach (string message in messages)
             {
+                yield return manager.Prompt.Text(message, !automatic);
                 if (automatic)
                 {
-                    yield return Textbox.Text(message);
                     yield return YieldUtil.WaitForSecondsScaled(automaticDelay, useScaledTime);
                 }
-                else
-                {
-                    yield return Prompt.TextAndWait(message);
-                }
 
-                if (runningId != myId) yield break;
+                if (manager.RunningId != id) yield break;
             }
 
-            runningId = 0;
             if (clearOnFinish)
             {
-                yield return Textbox.Text(string.Empty);
+                yield return manager.Prompt.Text("", false);
             }
-            dialogueEnd.Invoke();
         }
     }
 }
