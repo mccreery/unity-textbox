@@ -46,7 +46,8 @@ namespace McCreery.Textbox
 
         private void PlayTypingSound(int distanceToWhitespace)
         {
-            if (audioClip != null && Time.unscaledTime - lastPlayTime >= minimumDelay)
+            if (isActiveAndEnabled && audioClip != null
+                && Time.unscaledTime - lastPlayTime >= minimumDelay)
             {
                 AudioSourceComponent.pitch = 1.0f
                     + GetWindowPitchShift(distanceToWhitespace)
